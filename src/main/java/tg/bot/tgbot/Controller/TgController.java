@@ -1,5 +1,7 @@
 package tg.bot.tgbot.Controller;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -7,14 +9,19 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import tg.bot.tgbot.config.BotConfig;
+import tg.bot.tgbot.service.KNOService;
 
+@Slf4j
 @Component
 public class TgController extends TelegramLongPollingBot{
 
-    private final BotConfig botConfig;
+    private BotConfig botConfig;
+    KNOService knoService;
 
+    @Autowired
     public TgController() {
-        botConfig = new BotConfig();
+        this.botConfig = botConfig;
+        knoService = new KNOService();
     }
 
     @Override
@@ -45,17 +52,20 @@ public class TgController extends TelegramLongPollingBot{
             response = "Ты куда жмешь, попуск ебаный";
         else if (textMsg.equals("/get"))
             response = "бля, ну функционал я еще не придумал";
-        else response = "че ты спизданул";
+        //else response = "fsdfa";
+        else if(textMsg.equals("228"))
+            response = "о, нигер, салам,че там слейвс?";
+        else response = knoService.GetRandomMessage();
         return response;
     }
 
     @Override
     public String getBotUsername() {
-        return botConfig.getBotName();
+        return botConfig.botName;
     }
 
     @Override
     public String getBotToken() {
-        return botConfig.getToken();
+        return botConfig.token;
     }
 }
